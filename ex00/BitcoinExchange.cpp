@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/25 00:11:26 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/25 00:44:09 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 BitcoinExchange::BitcoinExchange(void)
 {
+	// nothing at all
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &cpy)
