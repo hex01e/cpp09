@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/25 01:50:28 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 03:42:55 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,19 @@
 BitcoinExchange::BitcoinExchange(void)
 {
 	// nothing at all
+}
+
+void	BitcoinExchange::processData(void)
+{
+	char	token;
+	std::string	line;
+
+	std::getline(db, line);
+	if (line != "date,exchange_rate")
+		throw (0);
+	std::getline(db, line);
+	// token = std::strtok();
+	Date d(line);
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &cpy)
@@ -30,6 +43,7 @@ BitcoinExchange::BitcoinExchange(const std::string &inputFile)
 	db.open(DB_FILENAME, std::ios::in);
 	if (!db.good())
 		throw OpenFileFailed("Failed to open database file");
+	processData();
 }
 
 BitcoinExchange	&BitcoinExchange::operator=(const BitcoinExchange &cpy)
@@ -41,8 +55,11 @@ BitcoinExchange	&BitcoinExchange::operator=(const BitcoinExchange &cpy)
 
 BitcoinExchange::~BitcoinExchange(void)
 {
-	
+	in.close();
+	db.close();
 }
+
+// BitcoinExchange: nested OpenFileFailed exception class
 
 BitcoinExchange::OpenFileFailed::OpenFileFailed(void)
 {

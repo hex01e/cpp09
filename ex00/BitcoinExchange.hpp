@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/25 01:50:21 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/25 19:16:26 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define BITCOINEXCHANGE_HPP
 
 #include <map>
+#include "Date.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -24,9 +25,11 @@ class BitcoinExchange
 	private:
 		std::fstream	in;
 		std::fstream	db;
+		std::map<Date, double>	data;
 
 		BitcoinExchange(void);
-		void	process(void);
+
+		void	processData(void);
 
 	public:
 		BitcoinExchange(const BitcoinExchange& cpy);
