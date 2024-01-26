@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/26 03:52:06 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 04:41:14 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,32 @@ BitcoinExchange::BitcoinExchange(void)
 void	BitcoinExchange::processData(void)
 {
 	std::string	line;
+	std::pair<Date, double>	db_line;
 
 	std::getline(db, line);
 	if (line != "date,exchange_rate")
 		throw (0);
-	std::getline(db, line);
-	while (line.empty())
+	while (std::getline(db, line))
 	{
-		std::cout << line << std::endl;
-		std::getline(db, line);
+		db_line = parseLine(line);
+		std::cout << db_line.first << " <++> " << db_line.second << std::endl;
 	}
+}
+
+std::pair<Date, double>	BitcoinExchange::parseLine(const std::string &line)
+{
+	Date	date;
+	char	*date_str;
+	char	*bitcoin_str;
+	double	bitcoin;
+
+	date_str = std::strtok((char *)line.c_str(), ",");
+	bitcoin_str = std::strtok(NULL, ",");
+	if (!date_str || !bitcoin_str)
+		throw Date::InvalidDate();
+	date = Date(date_str);
+	bitcoin = static_cast<double>(std::strtod(bitcoin_str, 0));
+	return std::pair<Date, double>(date, bitcoin);
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &cpy)

@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:36:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/26 04:03:08 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 04:51:34 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,28 @@ Date::Date(const Date &cpy)
 
 Date::Date(const std::string &date_str)
 {
-	int		i;
+	int		ten;
+	size_t	tmp;
 	char	*token;
 	std::stringstream	stream;
 
-	i = 0;
+	tmp = 0;
+	date = 0;
+	ten = 10000;
 	token = std::strtok((char *)date_str.c_str(), "-");
 	if (!token)
 		throw (InvalidDate("no date specified"));
 	while (token)
 	{
-		std::cout << token << std::endl;
+		if (!ten)
+			throw InvalidDate("date should be Year-Month-Day");
+		stream.clear();
+		stream << token;
+		stream >> tmp;
+		date += tmp * ten;
+		ten /= 100;
 		token = std::strtok(NULL, "-");
-		i++;
 	}
-	std::cout << i << std::endl;
 }
 
 Date	&Date::operator=(const Date &cpy)
