@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:35:21 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/25 19:06:01 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 03:59:29 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class Date
 		bool	operator<=(const Date& cpy);
 		bool	operator>=(const Date& cpy);
 
+		size_t	getDate(void) const;
+
 		class InvalidDate : public std::exception
 		{
 			private:
@@ -51,5 +53,7 @@ class Date
 
 		~Date(void);
 };
+
+std::ostream	&operator<<(std::ostream& out, Date &date);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/26 03:42:55 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 03:52:06 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,17 @@ BitcoinExchange::BitcoinExchange(void)
 
 void	BitcoinExchange::processData(void)
 {
-	char	token;
 	std::string	line;
 
 	std::getline(db, line);
 	if (line != "date,exchange_rate")
 		throw (0);
 	std::getline(db, line);
-	// token = std::strtok();
-	Date d(line);
+	while (line.empty())
+	{
+		std::cout << line << std::endl;
+		std::getline(db, line);
+	}
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &cpy)

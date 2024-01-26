@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:36:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/26 03:40:57 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 04:03:08 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Date::Date(void)
 {
-	// nothing
+	date = 0;
 }
 
 Date::Date(const Date &cpy)
@@ -73,6 +73,11 @@ bool	Date::operator>=(const Date &cpy)
 	return (date >= cpy.date ? true : false);
 }
 
+size_t	Date::getDate(void) const
+{
+	return (date);
+}
+
 Date::~Date(void)
 {
 	// nothing
@@ -110,4 +115,10 @@ const char	*Date::InvalidDate::what() const throw()
 Date::InvalidDate::~InvalidDate(void) throw()
 {
 	// nothing
+}
+
+std::ostream	&operator<<(std::ostream &out, Date &date)
+{
+	out << date.getDate();
+	return (out);
 }

@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/25 19:16:26 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/26 03:49:07 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class BitcoinExchange
 		BitcoinExchange(void);
 
 		void	processData(void);
+		std::pair<Date, double>	parseLine(const std::string& line);
 
 	public:
 		BitcoinExchange(const BitcoinExchange& cpy);
