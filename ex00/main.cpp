@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:06:00 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/25 11:42:07 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/27 06:27:03 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	main(int ac, char const *av[])
 		BitcoinExchange	btc(av[1]);
 		// btc.exchange();
 	}
-	catch(const BitcoinExchange::OpenFileFailed& e)
+	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cerr << "Error: " << e.what() << std::endl;
 	}
 	
 	return 0;
