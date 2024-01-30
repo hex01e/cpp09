@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:35:21 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/26 03:59:29 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/30 03:18:33 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <sstream>
 #include <iostream>
+#include "BitcoinExchange.hpp"
 
 class Date
 {
@@ -24,7 +25,7 @@ class Date
 	public:
 		Date(void);
 		Date(const Date& cpy);
-		Date(const std::string& date_str);
+		Date(std::string date_str);
 
 		Date&	operator=(const Date& cpy);
 		bool	operator>(const Date& cpy);
@@ -34,22 +35,6 @@ class Date
 		bool	operator>=(const Date& cpy);
 
 		size_t	getDate(void) const;
-
-		class InvalidDate : public std::exception
-		{
-			private:
-				const char	*msg;
-			public:
-				InvalidDate(void);
-				InvalidDate(const char *msg);
-				InvalidDate(const InvalidDate& cpy);
-		
-				InvalidDate&	operator=(const InvalidDate& cpy);
-
-				const char	*what() const throw();
-
-				~InvalidDate(void) throw();
-		};
 
 		~Date(void);
 };

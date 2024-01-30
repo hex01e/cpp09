@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/27 08:10:44 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/30 03:27:35 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 
 #define DB_FILENAME "data.csv"
 
+class Date;
+
 class BitcoinExchange
 {
 	private:
@@ -30,7 +32,8 @@ class BitcoinExchange
 		BitcoinExchange(void);
 
 		void	processData(void);
-		std::pair<Date, double>	parseLine(const std::string& line, const std::string& del);
+		double	parseValue(std::string line);
+		std::pair<Date, double>	parseLine(std::string& line, const std::string& del);
 
 	public:
 		BitcoinExchange(const BitcoinExchange& cpy);
@@ -73,5 +76,6 @@ class BitcoinExchange
 
 		~BitcoinExchange(void);
 };
+
 
 #endif

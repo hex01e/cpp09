@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/27 08:11:09 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/30 03:18:16 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ BitcoinExchange::BitcoinExchange(void)
 
 void	BitcoinExchange::processData(void)
 {
+	std::string	err;
 	std::string	line;
 	std::pair<Date, double>	db_line;
 
@@ -36,19 +37,35 @@ void	BitcoinExchange::processData(void)
 		}
 		catch (const std::exception& e)
 		{
-			8-8;
-			throw InvalidInput((std::string("Database file: ") + std::string(e.what())).c_str());
+			std::cout << "Database file: " << e.what() << std::endl;
 		}
 	}
 }
 
-std::pair<Date, double>	BitcoinExchange::parseLine(const std::string &line, const std::string& del)
+double	BitcoinExchange::parseValue(std::string line)
 {
-	Date	date;
-	char	*tmp;
+	char		*tmp;
+	double		value;
+	std::string	ws("\t\r\f ");
+
+	while (line.size() > 0 && ws.find(line.front()) != std::string::npos)
+			line.erase(line.front());
+	while (line.size() > 0 && ws.find(line.front()) != std::string::npos)
+			line.pop_back();
+	if (line.front() == '.' || line.back() == '.')
+		throw InvalidInput("Value is invaled");
+	value = static_cast<double>(std::strtod(line.c_str(), &tmp));
+	if (value == static_cast<double>(std::strtod("nan", 0)))
+		throw InvalidInput("Value is invaled, nan number is invaled");// non not working
+	if (!std::string(tmp).empty())
+		throw InvalidInput("Value is invaled , value should be a number");
+	return (value);
+}
+
+std::pair<Date, double>	BitcoinExchange::parseLine(std::string &line, const std::string& del)
+{
 	char	*date_str;
 	char	*bitcoin_str;
-	double	bitcoin;
 
 	int n = std::count(line.begin(), line.end(), del[0]);
 	if (n != 1)
@@ -56,14 +73,10 @@ std::pair<Date, double>	BitcoinExchange::parseLine(const std::string &line, cons
 	date_str = std::strtok((char *)line.c_str(), del.c_str());
 	bitcoin_str = std::strtok(NULL, del.c_str());
 	if (!date_str)
-		throw Date::InvalidDate("date should follow format: Year-month-day");
+		throw InvalidInput("date should follow format: Year-month-day");
 	if (!bitcoin_str)
 		throw InvalidInput("there no value");
-	date = Date(date_str);
-	bitcoin = static_cast<double>(std::strtod(bitcoin_str, &tmp));
-	if (!std::string(tmp).empty())
-		throw InvalidInput("value should be a number");
-	return std::pair<Date, double>(date, bitcoin);
+	return (std::pair<Date, double>(Date(date_str), parseValue(bitcoin_str)));
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &cpy)
@@ -132,13 +145,14 @@ BitcoinExchange::OpenFileFailed::~OpenFileFailed(void) throw()
 // exception of generall errors
 BitcoinExchange::InvalidInput::InvalidInput(void)
 {
-	// nothing
+	msg = "Invalid input";
 }
 
 BitcoinExchange::InvalidInput::InvalidInput(const char *msg)
 {
 	this->msg = msg;
 }
+
 
 BitcoinExchange::InvalidInput::InvalidInput(const InvalidInput &cpy)
 {

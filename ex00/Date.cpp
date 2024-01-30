@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:36:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/26 04:51:34 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/30 03:33:04 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,32 @@ Date::Date(const Date &cpy)
 	*this = cpy;
 }
 
-Date::Date(const std::string &date_str)
+Date::Date(std::string date_str)
 {
 	int		ten;
 	size_t	tmp;
 	char	*token;
+	std::string	ws("\t\r\f ");
 	std::stringstream	stream;
 
 	tmp = 0;
 	date = 0;
 	ten = 10000;
+
+	while (date_str.size() > 0 && ws.find(date_str.front()) != std::string::npos)
+			date_str.erase(date_str.front());
+	while (date_str.size() > 0 && ws.find(date_str.front()) != std::string::npos)
+			date_str.pop_back();
+	int n = std::count(date_str.begin(), date_str.end(), '-');
+	if (n != 2)
+		throw BitcoinExchange::InvalidInput("date should follow form Year-Month-Day");
 	token = std::strtok((char *)date_str.c_str(), "-");
 	if (!token)
-		throw (InvalidDate("no date specified"));
+		throw  BitcoinExchange::InvalidInput("no date specified");;
 	while (token)
 	{
 		if (!ten)
-			throw InvalidDate("date should be Year-Month-Day");
+			throw BitcoinExchange::InvalidInput("date should be Year-Month-Day");
 		stream.clear();
 		stream << token;
 		stream >> tmp;
@@ -86,40 +95,6 @@ size_t	Date::getDate(void) const
 }
 
 Date::~Date(void)
-{
-	// nothing
-}
-
-// Date: Invalid exception
-
-Date::InvalidDate::InvalidDate(void)
-{
-	msg = "Invalide date";
-}
-
-Date::InvalidDate::InvalidDate(const char *msg)
-{
-	this->msg = msg;
-}
-
-Date::InvalidDate::InvalidDate(const InvalidDate &cpy)
-{
-	*this = cpy;
-}
-
-Date::InvalidDate	&Date::InvalidDate::operator=(const InvalidDate &cpy)
-{
-	if (this != &cpy)
-		msg = cpy.msg;
-	return (*this);
-}
-
-const char	*Date::InvalidDate::what() const throw()
-{
-	return (msg);
-}
-
-Date::InvalidDate::~InvalidDate(void) throw()
 {
 	// nothing
 }
