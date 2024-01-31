@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:35:21 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 01:10:16 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/31 18:17:22 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class Date
 		bool	operator>(const Date& cpy) const;
 		bool	operator<(const Date& cpy) const;
 		bool	operator==(const Date& cpy) const;
+		bool	operator!=(const Date& cpy) const;
 		bool	operator<=(const Date& cpy) const;
 		bool	operator>=(const Date& cpy) const;
 
@@ -42,7 +43,7 @@ class Date
 		size_t	getDate(void) const;
 		size_t	getMonth(void) const;
 
-		void	check_date();
+		void	check_date(void);
 
 		~Date(void);
 };

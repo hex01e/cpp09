@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:36:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 01:54:46 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:55:11 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ Date::Date(std::string date_str)
 	date = 0;
 	ten = 10000;
 	BitcoinExchange::trim(date_str);
-	if (std::count(date_str.begin(), date_str.end(), '-') != 2)
+	if (std::count(date_str.begin(), date_str.end(), '-') != 2 || date_str[0] == '-')
 		throw BitcoinExchange::InvalidInput("date should follow form Year-Month-Day");
 	token = std::strtok((char *)date_str.c_str(), "-");
 	if (!token)
@@ -54,7 +54,7 @@ Date::Date(std::string date_str)
 		date += tmp * ten;
 		ten /= 100;
 		token = std::strtok(NULL, "-");
-		if (token && std::strlen(token) < 2)
+		if (token && std::strlen(token) != 2)
 			throw BitcoinExchange::InvalidInput("form Year-Month-Day (MM/DD)");
 	}
 	day = date % 100;
@@ -88,6 +88,11 @@ bool	Date::operator<(const Date &cpy) const
 bool	Date::operator==(const Date &cpy) const
 {
 	return (date == cpy.date ? true : false);
+}
+
+bool Date::operator!=(const Date &cpy) const
+{
+	return (date != cpy.date ? true : false);
 }
 
 bool	Date::operator<=(const Date &cpy) const
@@ -129,13 +134,13 @@ void	Date::check_date()
 		case 2:
 			if ((year % 4 == 0 && year % 100) || year % 400 == 0)
 			{
-				if (day > 29)
+				if (!day || day > 29)
 					throw BitcoinExchange::InvalidInput("day should be 1-29");
 			}
 			else if (!day || day > 28)
 				throw BitcoinExchange::InvalidInput("day should be 1-28");
 			break;
-		case 4: case 6: case 9: case 10:
+		case 4: case 6: case 9: case 11:
 			if (!day || day > 30)
 				throw BitcoinExchange::InvalidInput("day should be 1-30");
 			break;
