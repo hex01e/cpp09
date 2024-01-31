@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:35:21 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/30 03:18:33 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/31 01:10:16 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 class Date
 {
 	private:
+		size_t	day;
+		size_t	year;
 		size_t	date;
+		size_t	month;
 
 	public:
 		Date(void);
@@ -28,13 +31,18 @@ class Date
 		Date(std::string date_str);
 
 		Date&	operator=(const Date& cpy);
-		bool	operator>(const Date& cpy);
-		bool	operator<(const Date& cpy);
-		bool	operator==(const Date& cpy);
-		bool	operator<=(const Date& cpy);
-		bool	operator>=(const Date& cpy);
+		bool	operator>(const Date& cpy) const;
+		bool	operator<(const Date& cpy) const;
+		bool	operator==(const Date& cpy) const;
+		bool	operator<=(const Date& cpy) const;
+		bool	operator>=(const Date& cpy) const;
 
+		size_t	getDay(void) const;
+		size_t	getYear(void) const;
 		size_t	getDate(void) const;
+		size_t	getMonth(void) const;
+
+		void	check_date();
 
 		~Date(void);
 };
