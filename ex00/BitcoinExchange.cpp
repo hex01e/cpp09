@@ -6,11 +6,13 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 01:51:52 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:52:52 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
+
+bool	BitcoinExchange::state = false;
 
 BitcoinExchange::BitcoinExchange(void)
 {
@@ -19,27 +21,29 @@ BitcoinExchange::BitcoinExchange(void)
 
 void	BitcoinExchange::processData(void)
 {
-	std::string	err;
 	std::string	line;
 	std::pair<Date, double>	db_line;
 
+	size_t nl = 1;
 	std::getline(db, line);
-	if (line != "date,exchange_rate")
+	if (line != "date,exchange_rate") // check later
 		throw InvalidInput("database:header line should be date,exchange_rate");
 	while (std::getline(db, line))
 	{
+		nl++;
 		if (line.empty())
 			continue; // check later
 		try
 		{
 			db_line = parseLine(line, ",");
-			std::cout << db_line.first << " => " << db_line.second << std::endl;
+			data[db_line.first] = db_line.second;
 		}
 		catch (const std::exception& e)
 		{
-			std::cout << "Database file: " << e.what() << std::endl;
+			std::cout << "Database file: "<< nl << "\t: "<< e.what() << std::endl;
 		}
 	}
+	state = true;
 }
 
 double	BitcoinExchange::parseValue(std::string line)
@@ -52,10 +56,12 @@ double	BitcoinExchange::parseValue(std::string line)
 		throw InvalidInput("Value is invaled");
 	value = std::strtod(line.c_str(), &tmp);
 	if (value == std::strtod("nan", 0))
-		throw InvalidInput("Value is invaled, nan number is invaled");// non not working
+		throw InvalidInput("Value is invaled, nan is invaled");// non not working
 	if (!std::string(tmp).empty())
 		throw InvalidInput("Value is invaled , value should be a number");
-	if (value > 1000)
+	if (value < 0)
+		throw InvalidInput("Value is invaled , not a positive value");
+	if ((value > 1000 && state))
 		throw InvalidInput("Value is invaled , value should be 1-1000");
 	return (value);
 }
@@ -65,13 +71,14 @@ std::pair<Date, double>	BitcoinExchange::parseLine(std::string &line, const std:
 	char	*date_str;
 	char	*bitcoin_str;
 
+	trim(line);
 	if (std::count(line.begin(), line.end(), del[0]) != 1)
 		throw InvalidInput("should follow format: date, value");
 	date_str = std::strtok((char *)line.c_str(), del.c_str());
 	bitcoin_str = std::strtok(NULL, del.c_str());
 	if (!date_str)
 		throw InvalidInput("date should follow format: Year-month-day");
-	if (!bitcoin_str)
+	if (!bitcoin_str || line.empty())
 		throw InvalidInput("there no value");
 	return (std::pair<Date, double>(Date(date_str), parseValue(bitcoin_str)));
 }
@@ -99,12 +106,44 @@ BitcoinExchange	&BitcoinExchange::operator=(const BitcoinExchange &cpy)
 	return (*this);
 }
 
+void	BitcoinExchange::exchange(void)
+{
+	std::string	line;
+	std::pair<Date, double>	db_line;
+
+	std::getline(in, line);
+	if (line != "date | value") // check later
+		throw InvalidInput("database:header line should be date,exchange_rate");
+	while (std::getline(in, line))
+	{
+		if (line.empty())
+			continue; // check later
+		try
+		{
+			db_line = parseLine(line, "|");
+			data[db_line.first] = db_line.second;
+			std::cout << db_line.first << " => " << db_line.second * getBtc(db_line.first) << std::endl;
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << "Input file: " << e.what() << std::endl;
+		}
+	}
+}
+
+double	BitcoinExchange::getBtc(Date &date)
+{
+	std::map<Date, double>::iterator	y;
+
+	y = data.lower_bound(date);
+	return (y->first != date && y != data.end() ? (--y)->second : y->second);
+}
+
 void	BitcoinExchange::trim(std::string &str)
 {
-	std::string	ws("\t\r\f ");
-	while (str.size() > 0 && ws.find(str.front()) != std::string::npos)
-		str.erase(str.front());
-	while (str.size() > 0 && ws.find(str.front()) != std::string::npos)
+	while (str.size() > 0 && std::isspace(str.front()))
+		str.erase(str.begin());
+	while (str.size() > 0 && std::isspace(str.back()))
 		str.pop_back();
 }
 
