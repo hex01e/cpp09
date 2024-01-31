@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/30 03:18:16 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/01/31 01:51:52 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,17 @@ double	BitcoinExchange::parseValue(std::string line)
 {
 	char		*tmp;
 	double		value;
-	std::string	ws("\t\r\f ");
 
-	while (line.size() > 0 && ws.find(line.front()) != std::string::npos)
-			line.erase(line.front());
-	while (line.size() > 0 && ws.find(line.front()) != std::string::npos)
-			line.pop_back();
+	trim(line);
 	if (line.front() == '.' || line.back() == '.')
 		throw InvalidInput("Value is invaled");
-	value = static_cast<double>(std::strtod(line.c_str(), &tmp));
-	if (value == static_cast<double>(std::strtod("nan", 0)))
+	value = std::strtod(line.c_str(), &tmp);
+	if (value == std::strtod("nan", 0))
 		throw InvalidInput("Value is invaled, nan number is invaled");// non not working
 	if (!std::string(tmp).empty())
 		throw InvalidInput("Value is invaled , value should be a number");
+	if (value > 1000)
+		throw InvalidInput("Value is invaled , value should be 1-1000");
 	return (value);
 }
 
@@ -67,8 +65,7 @@ std::pair<Date, double>	BitcoinExchange::parseLine(std::string &line, const std:
 	char	*date_str;
 	char	*bitcoin_str;
 
-	int n = std::count(line.begin(), line.end(), del[0]);
-	if (n != 1)
+	if (std::count(line.begin(), line.end(), del[0]) != 1)
 		throw InvalidInput("should follow format: date, value");
 	date_str = std::strtok((char *)line.c_str(), del.c_str());
 	bitcoin_str = std::strtok(NULL, del.c_str());
@@ -100,6 +97,15 @@ BitcoinExchange	&BitcoinExchange::operator=(const BitcoinExchange &cpy)
 	if (this != &cpy)
 		return (*this);
 	return (*this);
+}
+
+void	BitcoinExchange::trim(std::string &str)
+{
+	std::string	ws("\t\r\f ");
+	while (str.size() > 0 && ws.find(str.front()) != std::string::npos)
+		str.erase(str.front());
+	while (str.size() > 0 && ws.find(str.front()) != std::string::npos)
+		str.pop_back();
 }
 
 BitcoinExchange::~BitcoinExchange(void)
