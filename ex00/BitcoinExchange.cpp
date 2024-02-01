@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 19:52:52 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:00:21 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,20 @@ void	BitcoinExchange::processData(void)
 	size_t nl = 1;
 	std::getline(db, line);
 	if (line != "date,exchange_rate") // check later
-		throw InvalidInput("database:header line should be date,exchange_rate");
+		throw InvalidInput("Database file line 1\t:header line should be date,exchange_rate");
 	while (std::getline(db, line))
 	{
-		nl++;
-		if (line.empty())
-			continue; // check later
 		try
 		{
+			nl++;
+			if (line.empty())
+				throw InvalidInput("empty line");
 			db_line = parseLine(line, ",");
 			data[db_line.first] = db_line.second;
 		}
 		catch (const std::exception& e)
 		{
-			std::cout << "Database file: "<< nl << "\t: "<< e.what() << std::endl;
+			std::cout << "Error: Database file line "<< nl << "\t: "<< e.what() << std::endl;
 		}
 	}
 	state = true;
@@ -49,19 +49,19 @@ void	BitcoinExchange::processData(void)
 double	BitcoinExchange::parseValue(std::string line)
 {
 	char		*tmp;
+	size_t		index;
 	double		value;
 
 	trim(line);
 	if (line.front() == '.' || line.back() == '.')
 		throw InvalidInput("Value is invaled");
 	value = std::strtod(line.c_str(), &tmp);
-	if (value == std::strtod("nan", 0))
-		throw InvalidInput("Value is invaled, nan is invaled");// non not working
-	if (!std::string(tmp).empty())
+	index = line.find_first_not_of("0123456789.+-");
+	if (index != std::string::npos || !std::string(tmp).empty())
 		throw InvalidInput("Value is invaled , value should be a number");
 	if (value < 0)
 		throw InvalidInput("Value is invaled , not a positive value");
-	if ((value > 1000 && state))
+	if (value > 1000.0 && state)
 		throw InvalidInput("Value is invaled , value should be 1-1000");
 	return (value);
 }
@@ -72,15 +72,21 @@ std::pair<Date, double>	BitcoinExchange::parseLine(std::string &line, const std:
 	char	*bitcoin_str;
 
 	trim(line);
-	if (std::count(line.begin(), line.end(), del[0]) != 1)
-		throw InvalidInput("should follow format: date, value");
+	if (std::count(line.begin(), line.end(), del[0]) != 1 || line[0] == del[0])
+	{
+		std::string err("should follow format: Date");
+		err += del + std::string(" value");
+		if (!state)
+			throw InvalidInput("should follow format: date,value");
+		throw InvalidInput();
+	}
 	date_str = std::strtok((char *)line.c_str(), del.c_str());
 	bitcoin_str = std::strtok(NULL, del.c_str());
 	if (!date_str)
 		throw InvalidInput("date should follow format: Year-month-day");
 	if (!bitcoin_str || line.empty())
 		throw InvalidInput("there no value");
-	return (std::pair<Date, double>(Date(date_str), parseValue(bitcoin_str)));
+	return (std::pair<Date, double>(Date(date_str, *this), parseValue(bitcoin_str)));
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &cpy)
@@ -111,22 +117,25 @@ void	BitcoinExchange::exchange(void)
 	std::string	line;
 	std::pair<Date, double>	db_line;
 
+	size_t	nl = 1;
 	std::getline(in, line);
-	if (line != "date | value") // check later
-		throw InvalidInput("database:header line should be date,exchange_rate");
+	if (data.size() == 0)
+		throw InvalidInput("DataBase is empty");
+	if (line != "date | value")
+		throw InvalidInput("Input file line 1\t: header line should be date | value");
 	while (std::getline(in, line))
 	{
-		if (line.empty())
-			continue; // check later
 		try
 		{
+			nl++;
+			if (line.empty())
+				throw InvalidInput("empty line");
 			db_line = parseLine(line, "|");
-			data[db_line.first] = db_line.second;
-			std::cout << db_line.first << " => " << db_line.second * getBtc(db_line.first) << std::endl;
+			std::cout << db_line.first << " => " << db_line.second << " = " << db_line.second * getBtc(db_line.first) << std::endl;
 		}
 		catch (const std::exception& e)
 		{
-			std::cout << "Input file: " << e.what() << std::endl;
+			std::cerr << "Error: Input file line " << nl << "\t: " << e.what() << std::endl;
 		}
 	}
 }
@@ -136,7 +145,7 @@ double	BitcoinExchange::getBtc(Date &date)
 	std::map<Date, double>::iterator	y;
 
 	y = data.lower_bound(date);
-	return (y->first != date && y != data.end() ? (--y)->second : y->second);
+	return (y->first != date && y != data.end() && y != data.begin() ? (--y)->second : y->second);
 }
 
 void	BitcoinExchange::trim(std::string &str)
@@ -145,6 +154,11 @@ void	BitcoinExchange::trim(std::string &str)
 		str.erase(str.begin());
 	while (str.size() > 0 && std::isspace(str.back()))
 		str.pop_back();
+}
+
+std::map<Date, double> &BitcoinExchange::getData(void)
+{
+	return (data);
 }
 
 BitcoinExchange::~BitcoinExchange(void)

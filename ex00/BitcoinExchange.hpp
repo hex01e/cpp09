@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 18:43:14 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/01 17:13:36 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,11 @@ class BitcoinExchange
 
 		BitcoinExchange&	operator=(const BitcoinExchange& cpy);
 
-		void	exchange(void);
-		double	getBtc(Date& date);
+		void		exchange(void);
+		double		getBtc(Date& date);
 		static void	trim(std::string& str);
+
+		std::map<Date, double>&	getData(void);
 
 		class OpenFileFailed: public std::exception
 		{

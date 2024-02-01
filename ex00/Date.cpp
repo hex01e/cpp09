@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:36:08 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 19:55:11 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/01 17:57:53 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ Date::Date(const Date &cpy)
 	*this = cpy;
 }
 
-Date::Date(std::string date_str)
+Date::Date(std::string date_str, BitcoinExchange& btc)
 {
 	char	*t;
 	int		ten;
@@ -49,6 +49,8 @@ Date::Date(std::string date_str)
 		stream.clear();
 		stream.str(token);
 		tmp = std::strtoul(token, &t, 10);
+		if (tmp > 1844674407370955U)
+			throw BitcoinExchange::InvalidInput("year too high!");
 		if (!std::string(t).empty())
 			throw BitcoinExchange::InvalidInput("date should be Year-Month-Day (some invalid char)");
 		date += tmp * ten;
@@ -60,7 +62,7 @@ Date::Date(std::string date_str)
 	day = date % 100;
 	year = date / 10000;
 	month = (date % 10000) / 100;
-	check_date();
+	check_date(btc);
 }
 
 Date	&Date::operator=(const Date &cpy)
@@ -125,8 +127,12 @@ size_t	Date::getMonth(void) const
 	return (month);
 }
 
-void	Date::check_date()
+void	Date::check_date(BitcoinExchange& btc)
 {
+	std::map<Date, double>	data(btc.getData());
+
+	if (BitcoinExchange::state && data.begin()->first.date > date)
+		throw BitcoinExchange::InvalidInput("no data for this date in database");
 	if (month > 12 || month == 0)
 		throw BitcoinExchange::InvalidInput("month should be 1-12");
 	switch (month)

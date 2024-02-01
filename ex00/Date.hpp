@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:35:21 by houmanso          #+#    #+#             */
-/*   Updated: 2024/01/31 18:17:22 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/01 17:09:05 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <sstream>
 #include <iostream>
 #include "BitcoinExchange.hpp"
+
+class BitcoinExchange;
 
 class Date
 {
@@ -28,7 +30,7 @@ class Date
 	public:
 		Date(void);
 		Date(const Date& cpy);
-		Date(std::string date_str);
+		Date(std::string date_str, BitcoinExchange& btc);
 
 		Date&	operator=(const Date& cpy);
 		bool	operator>(const Date& cpy) const;
@@ -43,7 +45,7 @@ class Date
 		size_t	getDate(void) const;
 		size_t	getMonth(void) const;
 
-		void	check_date(void);
+		void	check_date(BitcoinExchange& btc);
 
 		~Date(void);
 };
