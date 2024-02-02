@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/01 18:00:21 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/02 13:54:52 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	BitcoinExchange::processData(void)
 
 	size_t nl = 1;
 	std::getline(db, line);
+	trimAll(line);
 	if (line != "date,exchange_rate") // check later
 		throw InvalidInput("Database file line 1\t:header line should be date,exchange_rate");
 	while (std::getline(db, line))
@@ -68,17 +69,16 @@ double	BitcoinExchange::parseValue(std::string line)
 
 std::pair<Date, double>	BitcoinExchange::parseLine(std::string &line, const std::string& del)
 {
-	char	*date_str;
-	char	*bitcoin_str;
+	std::string	err;
+	char		*date_str;
+	char		*bitcoin_str;
 
 	trim(line);
 	if (std::count(line.begin(), line.end(), del[0]) != 1 || line[0] == del[0])
 	{
-		std::string err("should follow format: Date");
+		err = "should follow format: Date ";
 		err += del + std::string(" value");
-		if (!state)
-			throw InvalidInput("should follow format: date,value");
-		throw InvalidInput();
+		throw InvalidInput(err.c_str());
 	}
 	date_str = std::strtok((char *)line.c_str(), del.c_str());
 	bitcoin_str = std::strtok(NULL, del.c_str());
@@ -121,7 +121,8 @@ void	BitcoinExchange::exchange(void)
 	std::getline(in, line);
 	if (data.size() == 0)
 		throw InvalidInput("DataBase is empty");
-	if (line != "date | value")
+	trimAll(line);
+	if (line != "date|value")
 		throw InvalidInput("Input file line 1\t: header line should be date | value");
 	while (std::getline(in, line))
 	{
@@ -154,6 +155,19 @@ void	BitcoinExchange::trim(std::string &str)
 		str.erase(str.begin());
 	while (str.size() > 0 && std::isspace(str.back()))
 		str.pop_back();
+}
+
+void	BitcoinExchange::trimAll(std::string &str)
+{
+	std::string::iterator	it;
+	
+	it = str.begin();
+	while (it != str.end())
+	{
+		while (it != str.end() && std::isspace(*it))
+			str.erase(it);
+		it++;
+	}
 }
 
 std::map<Date, double> &BitcoinExchange::getData(void)

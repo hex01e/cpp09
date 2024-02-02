@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -45,6 +46,7 @@ class BitcoinExchange
 		void		exchange(void);
 		double		getBtc(Date& date);
 		static void	trim(std::string& str);
+		static void	trimAll(std::string& str);
 
 		std::map<Date, double>&	getData(void);
 
