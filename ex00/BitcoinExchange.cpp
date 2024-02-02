@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/02 13:54:52 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/02 14:19:23 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ double	BitcoinExchange::parseValue(std::string line)
 	if (value < 0)
 		throw InvalidInput("Value is invaled , not a positive value");
 	if (value > 1000.0 && state)
-		throw InvalidInput("Value is invaled , value should be 1-1000");
+		throw InvalidInput("Value is invaled , value should be 0-1000");
 	return (value);
 }
 
