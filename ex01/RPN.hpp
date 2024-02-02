@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 15:05:46 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/02 17:52:55 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/02 22:46:34 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class RPN
 {
 	private:
-		std::stack<char>	stacky;
+		std::stack<long>	stacky;
 		RPN(void);
 
 	public:
@@ -28,6 +28,7 @@ class RPN
 
 		RPN&	operator=(const RPN& cpy);
 
+		void	calc(char op);
 		void	trimAll(std::string& str);
 
 		~RPN(void);
