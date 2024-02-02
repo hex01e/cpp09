@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:10:27 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/02 14:19:23 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/02 20:09:49 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,8 @@ void	BitcoinExchange::trimAll(std::string &str)
 	{
 		while (it != str.end() && std::isspace(*it))
 			str.erase(it);
-		it++;
+		if (it != str.end())
+			it++;
 	}
 }
 
