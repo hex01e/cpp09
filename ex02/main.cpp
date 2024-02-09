@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 15:45:36 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/08 15:57:36 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:16:12 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 	}
 	try
 	{
-		PmergeMe p(++argv);
+		PmergeMe(++argv).analyze();
 	}
 	catch(const std::exception& e)
 	{
