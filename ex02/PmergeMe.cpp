@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 15:46:36 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/09 16:22:02 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:46:01 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ PmergeMe::PmergeMe(void)
 
 PmergeMe::PmergeMe(char **args)
 {
-	a_time = 0;
 	containerA(args);
 	containerB(args);
 }
@@ -59,8 +58,9 @@ void	PmergeMe::sortContainerA(void)
 			Bi.push_back(pairs[i].second);
 	// insert the 1st element into main chain Ai
 	Ai.insert(Ai.begin(), Bi[0]);
-	// insert other elements 
-	for (size_t i = 0; i < Bi.size(); i++)
+	// insert other elements
+	size_t i = 1;
+	while (i < Bi.size())
 	{
 		size_t	old_jn_1 = jn_1;
 		size_t	jn = jacobsthal();
@@ -95,7 +95,8 @@ void	PmergeMe::sortContainerB(void)
 	// insert the 1st element into main chain Ai
 	Ai.insert(Ai.begin(), Bi[0]);
 	// insert other elements 
-	for (size_t i = 0; i < Bi.size(); i++)
+	size_t i = 1;
+	while (i < Bi.size())
 	{
 		size_t	old_jn_1 = jn_1;
 		size_t	jn = jacobsthal();
@@ -214,15 +215,12 @@ void	PmergeMe::analyze(void)
 	for (size_t i = 0; i < a.size(); i++)
 		std::cout << " " << a[i];
 	std::cout << std::endl;
-	std::cout << std::fixed << std::setprecision(5);
-	std::cout << "Time to process a range of 3000 elements with std::vector : ";
-	std::cout << a_time << std::endl;
-	std::cout << "Time to process a range of 3000 elements with std::deque : ";
-	std::cout << b_time << std::endl;
-	std::cout << a.size() << std::endl;
-	std::cout << b.size() << std::endl;
-	if (std::is_sorted(a.begin(), a.end()) && std::is_sorted(b.begin(), b.end()))
-		std::cout << "Sorted" << std::endl;
+	std::cout << "Time to process a range of " << a.size();
+	std::cout << " elements with std::vector : ";
+	std::cout << a_time << "us" << std::endl;
+	std::cout << "Time to process a range of " << b.size();
+	std::cout << " elements with std::deque : ";
+	std::cout << b_time << "us" << std::endl;
 }
 
 PmergeMe &PmergeMe::operator=(const PmergeMe &cpy)
