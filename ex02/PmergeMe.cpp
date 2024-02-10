@@ -6,7 +6,7 @@
 /*   By: houmanso <houmanso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 15:46:36 by houmanso          #+#    #+#             */
-/*   Updated: 2024/02/09 16:46:01 by houmanso         ###   ########.fr       */
+/*   Updated: 2024/02/10 15:53:33 by houmanso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,10 +217,10 @@ void	PmergeMe::analyze(void)
 	std::cout << std::endl;
 	std::cout << "Time to process a range of " << a.size();
 	std::cout << " elements with std::vector : ";
-	std::cout << a_time << "us" << std::endl;
+	std::cout << a_time << " us" << std::endl;
 	std::cout << "Time to process a range of " << b.size();
 	std::cout << " elements with std::deque : ";
-	std::cout << b_time << "us" << std::endl;
+	std::cout << b_time << " us" << std::endl;
 }
 
 PmergeMe &PmergeMe::operator=(const PmergeMe &cpy)
